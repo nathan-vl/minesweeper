@@ -9,7 +9,7 @@ struct Field
     struct Pos size;
     int mines;
 
-    struct Tile **tiles;
+    struct Tile *tiles;
 };
 
 struct Field newField(const struct Pos pos, const int mines);

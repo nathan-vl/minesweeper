@@ -10,17 +10,15 @@ struct Field newField(const struct Pos size, const int mines)
     field.mines = mines;
     field.size = size;
 
-    field.tiles = malloc(sizeof(struct Tile *) * size.y);
+    int field_area = size.x * size.y;
 
-    for (int y = 0; y < size.y; y++)
+    field.tiles = malloc(sizeof(struct Tile) * field_area);
+
+    for (int i = 0; i < field_area; i++)
     {
-        field.tiles[y] = malloc(sizeof(struct Tile) * size.x);
-
-        for (int x = 0; x < size.x; x++)
-        {
-            field.tiles[y][x].status = COVERED;
-            field.tiles[y][x].hasMine = false;
-        }
+        struct Tile *tile = &field.tiles[i];
+        tile->status = COVERED;
+        tile->hasMine = false;
     }
 
     return field;
@@ -28,16 +26,12 @@ struct Field newField(const struct Pos size, const int mines)
 
 void destroyField(struct Field *field)
 {
-    for (int y = 0; y < field->size.y; y++)
-    {
-        free(field->tiles[y]);
-    }
     free(field->tiles);
 }
 
 struct Tile *getTile(struct Field *field, const struct Pos pos)
 {
-    return &field->tiles[pos.y][pos.x];
+    return &field->tiles[pos.x + pos.y * field->size.x];
 }
 
 bool isInBound(struct Field *field, const struct Pos pos)
@@ -73,22 +67,20 @@ int getNumNeighoursMines(struct Field *field, struct Pos pos)
 void insertMines(struct Field *field)
 {
     int insertedMines = 0;
-    for (int y = 0; y < field->size.y; y++)
+
+    for (int i = 0; i < field->size.x * field->size.y; i++)
     {
-        for (int x = 0; x < field->size.x; x++)
+        struct Tile *tile = &field->tiles[i];
+
+        if (insertedMines == field->mines)
         {
-            struct Tile *tile = getTile(field, newPos(x, y));
+            return;
+        }
 
-            if (insertedMines == field->mines)
-            {
-                return;
-            }
-
-            if (tile->status != OPEN)
-            {
-                field->tiles[y][x].hasMine = true;
-                insertedMines++;
-            }
+        if (tile->status != OPEN)
+        {
+            tile->hasMine = true;
+            insertedMines++;
         }
     }
 }
@@ -99,17 +91,20 @@ void swapTiles(struct Field *field)
     {
         for (int x = 0; x < field->size.x; x++)
         {
-            if (getTile(field, newPos(x, y))->status != OPEN)
+            struct Tile *currentTile = getTile(field, newPos(x, y));
+            if (currentTile->status != OPEN)
             {
                 struct Pos pos = randomPos(newPos(
                     field->size.x - 1,
                     field->size.y - 1));
 
+                struct Tile *randomTile = getTile(field, pos);
+
                 if (!((pos.x == x && pos.y == y) || getTile(field, pos)->status == OPEN))
                 {
-                    struct Tile temp = field->tiles[y][x];
-                    field->tiles[y][x] = field->tiles[pos.y][pos.x];
-                    field->tiles[pos.y][pos.x] = temp;
+                    struct Tile *temp = currentTile;
+                    *currentTile = *randomTile;
+                    *randomTile = *temp;
                 }
             }
         }
@@ -186,7 +181,8 @@ void displayField(struct Field *field)
     {
         for (int x = 0; x < field->size.x; x++)
         {
-            printf("%c", getTileChar(&field->tiles[y][x]));
+            struct Pos pos = newPos(x, y);
+            printf("%c", getTileChar(getTile(field, pos)));
         }
         printf("\n");
     }
@@ -198,7 +194,8 @@ void displayOpenField(struct Field *field)
     {
         for (int x = 0; x < field->size.x; x++)
         {
-            printf("%c", getOpenTileChar(&field->tiles[y][x]));
+            struct Pos pos = newPos(x, y);
+            printf("%c", getOpenTileChar(getTile(field, pos)));
         }
         printf("\n");
     }
