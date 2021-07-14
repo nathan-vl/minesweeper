@@ -1,13 +1,22 @@
-C = gcc
+cc = gcc
+include_dir = -Iinclude
 
-INC_DIR = include
+linker_flags = -lncurses
+compiler_flags = -O3
+debug_flags = -g -Wall -Wextra -Wfloat-equal -Wpedantic -fsanitize=address
 
-OBJS = src/util.c src/tile.c src/minefield.c src/game.c src/main.c
-COMPILER_FLAGS = -O3
-DEBUG_FLAGS = -g -Wall -Wextra -Wfloat-equal -Wpedantic -fsanitize=address
-OBJ_OUT = Minesweeper
+objects = $(wildcard src/*.c)
 
-all:
-	$(C) $(OBJS) -I$(INC_DIR) $(COMPILER_FLAGS) $(DEBUG_FLAGS) -o $(OBJ_OUT)
-release:
-	$(C) $(OBJS) -I$(INC_DIR) $(COMPILER_FLAGS) -o $(OBJ_OUT)
+output_object = Minesweeper
+
+debug:
+	$(cc) $(include_dir) \
+	$(linker_flags) $(compiler_flags) $(debug_flags) \
+	$(objects) \
+	-o $(output_object)
+
+$(output_object):
+	$(cc) $(include_dir) \
+	$(linker_flags) $(compiler_flags) \
+	$(objects) \
+	-o $(output_object)
