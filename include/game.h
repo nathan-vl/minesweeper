@@ -32,7 +32,7 @@ struct Game
 };
 
 struct Game newGame(const struct Pos size, const int mines);
-void destroyGame(struct Game *game);
+void freeGame(struct Game *game);
 
 void playGame(struct Game *game);
 

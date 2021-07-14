@@ -14,7 +14,7 @@ struct Field
 
 struct Field newField(const struct Pos pos, const int mines);
 
-void destroyField(struct Field *field);
+void freeField(struct Field *field);
 
 struct Tile *getTile(struct Field *field, const struct Pos pos);
 

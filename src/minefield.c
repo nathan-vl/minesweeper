@@ -24,7 +24,7 @@ struct Field newField(const struct Pos size, const int mines)
     return field;
 }
 
-void destroyField(struct Field *field)
+void freeField(struct Field *field)
 {
     free(field->tiles);
 }

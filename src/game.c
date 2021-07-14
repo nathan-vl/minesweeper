@@ -9,9 +9,9 @@ struct Game newGame(const struct Pos size, const int mines)
     return (struct Game){newField(size, mines), PROGRESS, false};
 }
 
-void destroyGame(struct Game *game)
+void freeGame(struct Game *game)
 {
-    destroyField(&game->field);
+    freeField(&game->field);
 }
 
 struct Action getAction(struct Field *field)
