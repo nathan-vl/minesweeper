@@ -139,12 +139,9 @@ void openNeighboursTiles(struct Field *field, const struct Pos pos)
         {
             struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
 
-            if (isInBound(field, neighbourPos))
+            if (isInBound(field, neighbourPos) && getTile(field, neighbourPos)->status != OPEN)
             {
-                if (getTile(field, neighbourPos)->status != OPEN)
-                {
-                    openTile(field, neighbourPos);
-                }
+                openTile(field, neighbourPos);
             }
         }
     }
@@ -156,12 +153,9 @@ struct Tile *openTile(struct Field *field, const struct Pos pos)
 
     tile->status = OPEN;
 
-    if (!tile->hasMine)
+    if (!tile->hasMine && tile->neighbours == 0)
     {
-        if (tile->neighbours == 0)
-        {
-            openNeighboursTiles(field, pos);
-        }
+        openNeighboursTiles(field, pos);
     }
 
     return tile;
