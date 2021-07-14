@@ -1,7 +1,7 @@
 #include "util.h"
 #include <stdlib.h>
 
-int randint(const int min, const int max)
+int randomInt(const int min, const int max)
 {
     return ((double)rand() / RAND_MAX) * (max - min + 1) + min;
 }
@@ -15,10 +15,10 @@ struct Pos newPos(int x, int y)
     return pos;
 }
 
-struct Pos randPos(const struct Pos max)
+struct Pos randomPos(const struct Pos max)
 {
-    int x = randint(0, max.x);
-    int y = randint(0, max.y);
+    int x = randomInt(0, max.x);
+    int y = randomInt(0, max.y);
 
     return newPos(x, y);
 }

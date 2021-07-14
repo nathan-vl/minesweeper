@@ -18,7 +18,7 @@ struct Field newField(const struct Pos size, const int mines)
 
         for (int x = 0; x < size.x; x++)
         {
-            field.tiles[y][x].status = covered;
+            field.tiles[y][x].status = COVERED;
             field.tiles[y][x].hasMine = false;
         }
     }
@@ -84,7 +84,7 @@ void insertMines(struct Field *field)
                 return;
             }
 
-            if (tile->status != opened)
+            if (tile->status != OPEN)
             {
                 field->tiles[y][x].hasMine = true;
                 insertedMines++;
@@ -99,13 +99,13 @@ void swapTiles(struct Field *field)
     {
         for (int x = 0; x < field->size.x; x++)
         {
-            if (getTile(field, newPos(x, y))->status != opened)
+            if (getTile(field, newPos(x, y))->status != OPEN)
             {
-                struct Pos pos = randPos(newPos(
+                struct Pos pos = randomPos(newPos(
                     field->size.x - 1,
                     field->size.y - 1));
 
-                if (!((pos.x == x && pos.y == y) || getTile(field, pos)->status == opened))
+                if (!((pos.x == x && pos.y == y) || getTile(field, pos)->status == OPEN))
                 {
                     struct Tile temp = field->tiles[y][x];
                     field->tiles[y][x] = field->tiles[pos.y][pos.x];
@@ -136,11 +136,6 @@ void initMines(struct Field *field)
     setNeighboursField(field);
 }
 
-void setOpen(struct Tile *tile)
-{
-    tile->status = opened;
-}
-
 void openNeighboursTiles(struct Field *field, const struct Pos pos)
 {
     for (int y = -1; y <= 1; y++)
@@ -151,7 +146,7 @@ void openNeighboursTiles(struct Field *field, const struct Pos pos)
 
             if (isInBound(field, neighbourPos))
             {
-                if (getTile(field, neighbourPos)->status != opened)
+                if (getTile(field, neighbourPos)->status != OPEN)
                 {
                     openTile(field, neighbourPos);
                 }
@@ -164,7 +159,7 @@ struct Tile *openTile(struct Field *field, const struct Pos pos)
 {
     struct Tile *tile = getTile(field, pos);
 
-    setOpen(tile);
+    tile->status = OPEN;
 
     if (!tile->hasMine)
     {
@@ -179,7 +174,7 @@ struct Tile *openTile(struct Field *field, const struct Pos pos)
 
 void openFirstTile(struct Field *field, const struct Pos pos)
 {
-    setOpen(getTile(field, pos));
+    getTile(field, pos)->status = OPEN;
 
     initMines(field);
     openTile(field, pos);

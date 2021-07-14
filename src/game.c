@@ -6,7 +6,7 @@
 
 struct Game newGame(const struct Pos size, const int mines)
 {
-    return (struct Game){newField(size, mines), progress, false};
+    return (struct Game){newField(size, mines), PROGRESS, false};
 }
 
 void destroyGame(struct Game *game)
@@ -17,7 +17,7 @@ void destroyGame(struct Game *game)
 struct Action getAction(struct Field *field)
 {
     bool inputIsValid = false;
-    struct Action action = {helpAction, {-1, -1}};
+    struct Action action = {DISPLAY_HELP_ACTION, {-1, -1}};
     char line[15];
 
     do
@@ -28,17 +28,17 @@ struct Action getAction(struct Field *field)
 
         if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
         {
-            action.type = flagTileAction;
+            action.type = FLAG_TILE_ACTION;
             inputIsValid = true;
         }
         else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
         {
-            action.type = guessTileAction;
+            action.type = GUESS_TILE_ACTION;
             inputIsValid = true;
         }
         else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
         {
-            action.type = openTileAction;
+            action.type = OPEN_TILE_ACTION;
             inputIsValid = true;
         }
         else if (strcmp(line, "help") == 0 || strcmp(line, "?") == 0)
@@ -52,7 +52,7 @@ struct Action getAction(struct Field *field)
 
 void doAction(struct Action action, struct Game *game)
 {
-    if (action.type == helpAction)
+    if (action.type == DISPLAY_HELP_ACTION)
     {
         printf("Available commands:\n");
 
@@ -64,14 +64,14 @@ void doAction(struct Action action, struct Game *game)
     else
     {
         struct Tile *tile = getTile(&game->field, action.pos);
-        if (action.type == openTileAction)
+        if (action.type == OPEN_TILE_ACTION)
         {
             if (game->hasOpenedFirstTile)
             {
                 openTile(&game->field, action.pos);
                 if (tile->hasMine)
                 {
-                    game->status = lost;
+                    game->status = LOST;
                 }
             }
             else
@@ -80,15 +80,15 @@ void doAction(struct Action action, struct Game *game)
                 game->hasOpenedFirstTile = true;
             }
         }
-        if (tile->status != opened)
+        if (tile->status != OPEN)
         {
-            if (action.type == flagTileAction)
+            if (action.type == FLAG_TILE_ACTION)
             {
-                tile->status = flag;
+                tile->status = FLAG;
             }
-            else if (action.type == guessTileAction)
+            else if (action.type == GUESS_TILE_ACTION)
             {
-                tile->status = guess;
+                tile->status = GUESS;
             }
         }
     }
@@ -96,7 +96,7 @@ void doAction(struct Action action, struct Game *game)
 
 void playGame(struct Game *game)
 {
-    while (game->status == progress)
+    while (game->status == PROGRESS)
     {
         displayField(&game->field);
 
@@ -106,7 +106,7 @@ void playGame(struct Game *game)
 
     displayOpenField(&game->field);
 
-    if (game->status == won)
+    if (game->status == WON)
     {
         printf("Congratulations, you won!\n");
     }

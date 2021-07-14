@@ -1,5 +1,5 @@
-#ifndef UTIL
-#define UTIL
+#ifndef UTIL_H
+#define UTIL_H
 
 struct Pos
 {
@@ -7,8 +7,8 @@ struct Pos
     int y;
 };
 
-int randint(const int min, const int max);
+int randomInt(const int min, const int max);
 struct Pos newPos(int x, int y);
-struct Pos randPos(const struct Pos max);
+struct Pos randomPos(const struct Pos max);
 
 #endif

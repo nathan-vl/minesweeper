@@ -4,35 +4,35 @@ char getTileChar(struct Tile *tile)
 {
     switch (tile->status)
     {
-    case covered:
-        return COVERED;
-    case flag:
-        return FLAG;
-    case guess:
-        return GUESS;
+    case COVERED:
+        return COVERED_CHAR;
+    case FLAG:
+        return FLAG_CHAR;
+    case GUESS:
+        return GUESS_CHAR;
     default:
         if (tile->hasMine)
         {
-            return MINE;
+            return MINE_CHAR;
         }
         else if (tile->neighbours != 0)
         {
             return tile->neighbours + '0';
         }
     }
-    return OPENED;
+    return OPEN_CHAR;
 }
 
 char getOpenTileChar(struct Tile *tile)
 {
     if (tile->hasMine)
     {
-        return MINE;
+        return MINE_CHAR;
     }
     else if (tile->neighbours != 0)
     {
         return tile->neighbours + '0';
     }
 
-    return OPENED;
+    return OPEN_CHAR;
 }

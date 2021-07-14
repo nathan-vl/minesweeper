@@ -1,24 +1,27 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include "minefield.h"
 
-enum TypeAction
+enum PlayerAction
 {
-    openTileAction,
-    flagTileAction,
-    guessTileAction,
-    helpAction
+    OPEN_TILE_ACTION,
+    FLAG_TILE_ACTION,
+    GUESS_TILE_ACTION,
+    DISPLAY_HELP_ACTION
 };
 
 struct Action
 {
-    enum TypeAction type;
+    enum PlayerAction type;
     struct Pos pos;
 };
 
 enum GameStatus
 {
-    progress,
-    won,
-    lost
+    PROGRESS,
+    WON,
+    LOST
 };
 
 struct Game
@@ -32,3 +35,5 @@ struct Game newGame(const struct Pos size, const int mines);
 void destroyGame(struct Game *game);
 
 void playGame(struct Game *game);
+
+#endif

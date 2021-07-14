@@ -1,20 +1,20 @@
-#ifndef TILE
-#define TILE
+#ifndef TILE_H
+#define TILE_H
 
 #include <stdbool.h>
 
-#define COVERED '#'
-#define OPENED '.'
-#define FLAG '!'
-#define GUESS '?'
-#define MINE 'o'
+#define COVERED_CHAR '#'
+#define OPEN_CHAR '.'
+#define FLAG_CHAR '!'
+#define GUESS_CHAR '?'
+#define MINE_CHAR 'o'
 
 enum TileStatus
 {
-    opened,
-    flag,
-    covered,
-    guess
+    OPEN,
+    FLAG,
+    COVERED,
+    GUESS
 };
 
 struct Tile

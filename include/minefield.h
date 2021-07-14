@@ -1,5 +1,5 @@
-#ifndef MINEFIELD
-#define MINEFIELD
+#ifndef MINEFIELD_H
+#define MINEFIELD_H
 
 #include <stdbool.h>
 #include "util.h"
