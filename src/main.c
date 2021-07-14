@@ -11,7 +11,7 @@ int main()
 
     playGame(&game);
 
-    destroyGame(&game);
+    freeGame(&game);
 
     return 0;
 }
