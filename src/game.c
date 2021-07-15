@@ -6,15 +6,15 @@
 
 struct Game newGame(const struct Pos size, const int mines)
 {
-    return (struct Game){newField(size, mines), PROGRESS, false};
+    return (struct Game){newMinefield(size, mines), PROGRESS, false};
 }
 
 void freeGame(struct Game *game)
 {
-    freeField(&game->field);
+    freeMinefield(&game->minefield);
 }
 
-struct Action getAction(struct Field *field)
+struct Action getAction(struct Minefield *minefield)
 {
     bool inputIsValid = false;
     struct Action action = {DISPLAY_HELP_ACTION, {-1, -1}};
@@ -26,17 +26,17 @@ struct Action getAction(struct Field *field)
 
         scanf("%[^\n]%*c", line);
 
-        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
+        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(minefield, action.pos))
         {
             action.type = FLAG_TILE_ACTION;
             inputIsValid = true;
         }
-        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
+        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(minefield, action.pos))
         {
             action.type = GUESS_TILE_ACTION;
             inputIsValid = true;
         }
-        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(field, action.pos))
+        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(minefield, action.pos))
         {
             action.type = OPEN_TILE_ACTION;
             inputIsValid = true;
@@ -63,12 +63,12 @@ void doAction(struct Action action, struct Game *game)
     }
     else
     {
-        struct Tile *tile = getTile(&game->field, action.pos);
+        struct Tile *tile = getTile(&game->minefield, action.pos);
         if (action.type == OPEN_TILE_ACTION)
         {
             if (game->hasOpenedFirstTile)
             {
-                openTile(&game->field, action.pos);
+                openTile(&game->minefield, action.pos);
                 if (tile->hasMine)
                 {
                     game->status = LOST;
@@ -76,7 +76,7 @@ void doAction(struct Action action, struct Game *game)
             }
             else
             {
-                openFirstTile(&game->field, action.pos);
+                openFirstTile(&game->minefield, action.pos);
                 game->hasOpenedFirstTile = true;
             }
         }
@@ -98,13 +98,13 @@ void playGame(struct Game *game)
 {
     while (game->status == PROGRESS)
     {
-        displayField(&game->field);
+        displayMinefield(&game->minefield);
 
-        struct Action action = getAction(&game->field);
+        struct Action action = getAction(&game->minefield);
         doAction(action, game);
     }
 
-    displayOpenField(&game->field);
+    displayOpenMinefield(&game->minefield);
 
     if (game->status == WON)
     {

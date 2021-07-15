@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "util.h"
 
-struct Field
+struct Minefield
 {
     struct Pos size;
     int mines;
@@ -12,34 +12,34 @@ struct Field
     struct Tile *tiles;
 };
 
-struct Field newField(const struct Pos pos, const int mines);
+struct Minefield newMinefield(const struct Pos pos, const int mines);
 
-void freeField(struct Field *field);
+void freeMinefield(struct Minefield *minefield);
 
-struct Tile *getTile(struct Field *field, const struct Pos pos);
+struct Tile *getTile(struct Minefield *minefield, const struct Pos pos);
 
-bool isInBound(struct Field *field, const struct Pos pos);
+bool isInBound(struct Minefield *minefield, const struct Pos pos);
 
-int getNumNeighoursMines(struct Field *field, struct Pos pos);
+int getNumNeighoursMines(struct Minefield *minefield, struct Pos pos);
 
-void insertMines(struct Field *field);
+void insertMines(struct Minefield *minefield);
 
-void swapTiles(struct Field *field);
+void swapTiles(struct Minefield *minefield);
 
-void setNeighboursField(struct Field *field);
+void setNeighboursMinefield(struct Minefield *minefield);
 
-void initMines(struct Field *field);
+void initMines(struct Minefield *minefield);
 
 void setOpen(struct Tile *tile);
 
-void openNeighboursTiles(struct Field *field, const struct Pos pos);
+void openNeighboursTiles(struct Minefield *minefield, const struct Pos pos);
 
-struct Tile *openTile(struct Field *field, const struct Pos pos);
+struct Tile *openTile(struct Minefield *minefield, const struct Pos pos);
 
-void openFirstTile(struct Field *field, const struct Pos pos);
+void openFirstTile(struct Minefield *minefield, const struct Pos pos);
 
-void displayField(struct Field *field);
+void displayMinefield(struct Minefield *minefield);
 
-void displayOpenField(struct Field *field);
+void displayOpenMinefield(struct Minefield *minefield);
 
 #endif

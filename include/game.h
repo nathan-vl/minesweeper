@@ -26,7 +26,7 @@ enum GameStatus
 
 struct Game
 {
-    struct Field field;
+    struct Minefield minefield;
     enum GameStatus status;
     bool hasOpenedFirstTile;
 };
