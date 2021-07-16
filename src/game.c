@@ -1,3 +1,4 @@
+#include "display.h"
 #include "game.h"
 #include "minefield.h"
 #include "tile.h"
@@ -80,7 +81,7 @@ void doAction(struct Action action, struct Game *game)
                 game->hasOpenedFirstTile = true;
             }
         }
-        if (tile->status != OPEN)
+        else if (tile->status != OPEN)
         {
             if (action.type == FLAG_TILE_ACTION)
             {

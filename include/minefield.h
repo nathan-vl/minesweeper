@@ -38,8 +38,4 @@ struct Tile *openTile(struct Minefield *minefield, const struct Pos pos);
 
 void openFirstTile(struct Minefield *minefield, const struct Pos pos);
 
-void displayMinefield(struct Minefield *minefield);
-
-void displayOpenMinefield(struct Minefield *minefield);
-
 #endif

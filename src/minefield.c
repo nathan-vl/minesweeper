@@ -168,29 +168,3 @@ void openFirstTile(struct Minefield *minefield, const struct Pos pos)
     initMines(minefield);
     openTile(minefield, pos);
 }
-
-void displayMinefield(struct Minefield *minefield)
-{
-    for (int y = 0; y < minefield->size.y; y++)
-    {
-        for (int x = 0; x < minefield->size.x; x++)
-        {
-            struct Pos pos = newPos(x, y);
-            printf("%c", getTileChar(getTile(minefield, pos)));
-        }
-        printf("\n");
-    }
-}
-
-void displayOpenMinefield(struct Minefield *minefield)
-{
-    for (int y = 0; y < minefield->size.y; y++)
-    {
-        for (int x = 0; x < minefield->size.x; x++)
-        {
-            struct Pos pos = newPos(x, y);
-            printf("%c", getOpenTileChar(getTile(minefield, pos)));
-        }
-        printf("\n");
-    }
-}
