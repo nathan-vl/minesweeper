@@ -87,25 +87,24 @@ void insertMines(struct Minefield *minefield)
 
 void swapTiles(struct Minefield *minefield)
 {
-    for (int y = 0; y < minefield->size.y; y++)
+    for (int i = 0; i < minefield->size.x * minefield->size.y; i++)
     {
-        for (int x = 0; x < minefield->size.x; x++)
+        struct Tile *currentTile = &minefield->tiles[i];
+
+        if (currentTile->status != OPEN)
         {
-            struct Tile *currentTile = getTile(minefield, newPos(x, y));
-            if (currentTile->status != OPEN)
+            int randomIndex = randomInt(0, minefield->size.x * minefield->size.y - 1);
+
+            struct Tile *randomTile = &minefield->tiles[randomIndex];
+
+            bool isDifferentTile = i != randomIndex;
+            bool isRandomTileNotOpen = randomTile->status != OPEN;
+
+            if (isDifferentTile && isRandomTileNotOpen)
             {
-                struct Pos pos = randomPos(newPos(
-                    minefield->size.x - 1,
-                    minefield->size.y - 1));
-
-                struct Tile *randomTile = getTile(minefield, pos);
-
-                if (!((pos.x == x && pos.y == y) || getTile(minefield, pos)->status == OPEN))
-                {
-                    struct Tile temp = *currentTile;
-                    *currentTile = *randomTile;
-                    *randomTile = temp;
-                }
+                struct Tile temp = *currentTile;
+                *currentTile = *randomTile;
+                *randomTile = temp;
             }
         }
     }
