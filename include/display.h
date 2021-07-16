@@ -10,9 +10,6 @@
 #define GUESS_TILE_CHAR '?'
 #define MINE_TILE_CHAR 'o'
 
-char getTileChar(struct Tile *tile);
-char getOpenTileChar(struct Tile *tile);
-
 void displayMinefield(struct Minefield *minefield);
 void displayOpenMinefield(struct Minefield *minefield);
 
