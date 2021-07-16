@@ -2,7 +2,6 @@
 #define DISPLAY_C
 
 #include "minefield.h"
-#include "tile.h"
 
 #define COVERED_TILE_CHAR '#'
 #define OPEN_TILE_CHAR '.'
