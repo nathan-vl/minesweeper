@@ -102,9 +102,9 @@ void swapTiles(struct Minefield *minefield)
 
                 if (!((pos.x == x && pos.y == y) || getTile(minefield, pos)->status == OPEN))
                 {
-                    struct Tile *temp = currentTile;
+                    struct Tile temp = *currentTile;
                     *currentTile = *randomTile;
-                    *randomTile = *temp;
+                    *randomTile = temp;
                 }
             }
         }
