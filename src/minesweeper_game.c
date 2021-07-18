@@ -42,42 +42,6 @@ bool isInBound(const struct Pos gameSize, const struct Pos pos)
     return isInBoundX && isInBoundY;
 }
 
-struct Action getAction(struct MinesweeperGame *game)
-{
-    bool inputIsValid = false;
-    struct Action action = {DISPLAY_HELP_ACTION, {-1, -1}};
-    char line[15];
-
-    do
-    {
-        printf("> ");
-
-        scanf("%[^\n]%*c", line);
-
-        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(action.pos, game->size))
-        {
-            action.type = FLAG_TILE_ACTION;
-            inputIsValid = true;
-        }
-        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
-        {
-            action.type = GUESS_TILE_ACTION;
-            inputIsValid = true;
-        }
-        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
-        {
-            action.type = OPEN_TILE_ACTION;
-            inputIsValid = true;
-        }
-        else if (strcmp(line, "help") == 0 || strcmp(line, "?") == 0)
-        {
-            inputIsValid = true;
-        }
-    } while (!inputIsValid);
-
-    return action;
-}
-
 struct Tile *getTile(struct MinesweeperGame *game, const struct Pos pos)
 {
     return &game->tiles[pos.x + pos.y * game->size.x];
@@ -252,6 +216,42 @@ void doAction(struct Action action, struct MinesweeperGame *game)
             }
         }
     }
+}
+
+struct Action getAction(struct MinesweeperGame *game)
+{
+    bool inputIsValid = false;
+    struct Action action = {DISPLAY_HELP_ACTION, {-1, -1}};
+    char line[15];
+
+    do
+    {
+        printf("> ");
+
+        scanf("%[^\n]%*c", line);
+
+        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(action.pos, game->size))
+        {
+            action.type = FLAG_TILE_ACTION;
+            inputIsValid = true;
+        }
+        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
+        {
+            action.type = GUESS_TILE_ACTION;
+            inputIsValid = true;
+        }
+        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
+        {
+            action.type = OPEN_TILE_ACTION;
+            inputIsValid = true;
+        }
+        else if (strcmp(line, "help") == 0 || strcmp(line, "?") == 0)
+        {
+            inputIsValid = true;
+        }
+    } while (!inputIsValid);
+
+    return action;
 }
 
 void playGame(struct MinesweeperGame *game)
