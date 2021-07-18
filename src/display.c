@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "display.h"
-#include "minefield.h"
+#include "minesweeper_game.h"
 #include "tile.h"
 #include "util.h"
 
@@ -42,27 +42,27 @@ char getOpenTileChar(struct Tile *tile)
     return OPEN_TILE_CHAR;
 }
 
-void displayMinefield(struct Minefield *minefield)
+void displayMinesweeperGame(struct MinesweeperGame *game)
 {
-    for (int y = 0; y < minefield->size.y; y++)
+    for (int y = 0; y < game->size.y; y++)
     {
-        for (int x = 0; x < minefield->size.x; x++)
+        for (int x = 0; x < game->size.x; x++)
         {
             struct Pos pos = newPos(x, y);
-            printf("%c", getTileChar(getTile(minefield, pos)));
+            printf("%c", getTileChar(getTile(game, pos)));
         }
         printf("\n");
     }
 }
 
-void displayOpenMinefield(struct Minefield *minefield)
+void displayOpenMinesweeperGame(struct MinesweeperGame *game)
 {
-    for (int y = 0; y < minefield->size.y; y++)
+    for (int y = 0; y < game->size.y; y++)
     {
-        for (int x = 0; x < minefield->size.x; x++)
+        for (int x = 0; x < game->size.x; x++)
         {
             struct Pos pos = newPos(x, y);
-            printf("%c", getOpenTileChar(getTile(minefield, pos)));
+            printf("%c", getOpenTileChar(getTile(game, pos)));
         }
         printf("\n");
     }
