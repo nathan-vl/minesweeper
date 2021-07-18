@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef MINESWEEPER_GAME_H
+#define MINESWEEPER_GAME_H
 
 #include <stdbool.h>
 #include "util.h"
