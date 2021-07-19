@@ -176,44 +176,33 @@ void openFirstTile(struct MinesweeperGame *game, const struct Pos pos)
 
 void doAction(struct Action action, struct MinesweeperGame *game)
 {
-    if (action.type == DISPLAY_HELP_ACTION)
-    {
-        printf("Available commands:\n");
+    struct Tile *tile = getTile(game, action.pos);
 
-        printf("Type \"help\" or \"?\" to show this message.\n");
-        printf("f 2 3 to put a flag at (2, 3)\n");
-        printf("g 2 3 to put a guess at (2, 3)\n");
-        printf("2 3 to open tile at (2, 3)\n");
-    }
-    else
+    if (action.type == OPEN_TILE_ACTION)
     {
-        struct Tile *tile = getTile(game, action.pos);
-        if (action.type == OPEN_TILE_ACTION)
+        if (game->hasOpenedFirstTile)
         {
-            if (game->hasOpenedFirstTile)
+            openTile(game, action.pos);
+            if (tile->hasMine)
             {
-                openTile(game, action.pos);
-                if (tile->hasMine)
-                {
-                    game->status = LOST;
-                }
-            }
-            else
-            {
-                openFirstTile(game, action.pos);
-                game->hasOpenedFirstTile = true;
+                game->status = LOST;
             }
         }
-        else if (tile->status != OPEN)
+        else
         {
-            if (action.type == FLAG_TILE_ACTION)
-            {
-                tile->status = FLAG;
-            }
-            else if (action.type == GUESS_TILE_ACTION)
-            {
-                tile->status = GUESS;
-            }
+            openFirstTile(game, action.pos);
+            game->hasOpenedFirstTile = true;
+        }
+    }
+    else if (tile->status != OPEN)
+    {
+        if (action.type == FLAG_TILE_ACTION)
+        {
+            tile->status = FLAG;
+        }
+        else if (action.type == GUESS_TILE_ACTION)
+        {
+            tile->status = GUESS;
         }
     }
 }
@@ -221,7 +210,9 @@ void doAction(struct Action action, struct MinesweeperGame *game)
 struct Action getAction(struct MinesweeperGame *game)
 {
     bool inputIsValid = false;
-    struct Action action = {DISPLAY_HELP_ACTION, {-1, -1}};
+    struct Action action;
+    action.pos = (struct Pos){-1, -1};
+
     char line[15];
 
     do
@@ -243,10 +234,6 @@ struct Action getAction(struct MinesweeperGame *game)
         else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
         {
             action.type = OPEN_TILE_ACTION;
-            inputIsValid = true;
-        }
-        else if (strcmp(line, "help") == 0 || strcmp(line, "?") == 0)
-        {
             inputIsValid = true;
         }
     } while (!inputIsValid);

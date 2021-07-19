@@ -9,7 +9,6 @@ enum PlayerAction
     OPEN_TILE_ACTION,
     FLAG_TILE_ACTION,
     GUESS_TILE_ACTION,
-    DISPLAY_HELP_ACTION
 };
 
 struct Action
