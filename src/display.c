@@ -1,9 +1,14 @@
 #include <stdio.h>
-
 #include "display.h"
 #include "minesweeper_game.h"
 #include "tile.h"
 #include "util.h"
+
+#define COVERED_TILE_CHAR '#'
+#define OPEN_TILE_CHAR '.'
+#define FLAG_TILE_CHAR '!'
+#define GUESS_TILE_CHAR '?'
+#define MINE_TILE_CHAR 'o'
 
 char getTileChar(struct Tile *tile)
 {

@@ -3,12 +3,6 @@
 
 #include "minesweeper_game.h"
 
-#define COVERED_TILE_CHAR '#'
-#define OPEN_TILE_CHAR '.'
-#define FLAG_TILE_CHAR '!'
-#define GUESS_TILE_CHAR '?'
-#define MINE_TILE_CHAR 'o'
-
 void displayMinesweeperGame(struct MinesweeperGame *game);
 void displayOpenMinesweeperGame(struct MinesweeperGame *game);
 
