@@ -22,27 +22,20 @@ char getTileChar(const struct Tile *tile)
         return GUESS_TILE_CHAR;
     default:
         if (tile->hasMine)
-        {
             return MINE_TILE_CHAR;
-        }
         else if (tile->neighbours != 0)
-        {
             return tile->neighbours + '0';
-        }
     }
+
     return OPEN_TILE_CHAR;
 }
 
 char getOpenTileChar(const struct Tile *tile)
 {
     if (tile->hasMine)
-    {
         return MINE_TILE_CHAR;
-    }
     else if (tile->neighbours != 0)
-    {
         return tile->neighbours + '0';
-    }
 
     return OPEN_TILE_CHAR;
 }
@@ -53,8 +46,7 @@ void displayMinesweeperGame(const struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            struct Pos pos = newPos(x, y);
-            printf("%c", getTileChar(getTile(game, pos)));
+            printf("%c", getTileChar(getTile(game, newPos(x, y))));
         }
         printf("\n");
     }
@@ -66,8 +58,7 @@ void displayOpenMinesweeperGame(const struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            struct Pos pos = newPos(x, y);
-            printf("%c", getOpenTileChar(getTile(game, pos)));
+            printf("%c", getOpenTileChar(getTile(game, newPos(x, y))));
         }
         printf("\n");
     }

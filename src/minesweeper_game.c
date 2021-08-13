@@ -46,10 +46,15 @@ struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos)
     return &game->tiles[pos.x + pos.y * game->size.x];
 }
 
-struct Tile *openTile(struct MinesweeperGame *game, struct Pos pos);
-
-void openNeighboursTiles(struct MinesweeperGame *game, struct Pos pos)
+void openTile(struct MinesweeperGame *game, struct Pos pos)
 {
+    struct Tile *tile = getTile(game, pos);
+
+    tile->status = OPEN;
+
+    if (tile->hasMine || tile->neighbours > 0)
+        return;
+
     for (int y = -1; y <= 1; y++)
     {
         for (int x = -1; x <= 1; x++)
@@ -57,25 +62,10 @@ void openNeighboursTiles(struct MinesweeperGame *game, struct Pos pos)
             struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
 
             if (isInBound(game->size, neighbourPos) && getTile(game, neighbourPos)->status != OPEN)
-            {
                 openTile(game, neighbourPos);
-            }
+
         }
     }
-}
-
-struct Tile *openTile(struct MinesweeperGame *game, struct Pos pos)
-{
-    struct Tile *tile = getTile(game, pos);
-
-    tile->status = OPEN;
-
-    if (!tile->hasMine && tile->neighbours == 0)
-    {
-        openNeighboursTiles(game, pos);
-    }
-
-    return tile;
 }
 
 void insertMines(struct MinesweeperGame *game)
@@ -87,15 +77,12 @@ void insertMines(struct MinesweeperGame *game)
         struct Tile *tile = &game->tiles[i];
 
         if (insertedMines == game->mines)
-        {
             return;
-        }
+        else if (tile->status == OPEN)
+            continue;
 
-        if (tile->status != OPEN)
-        {
-            tile->hasMine = true;
-            insertedMines++;
-        }
+        tile->hasMine = true;
+        insertedMines++;
     }
 }
 
@@ -105,21 +92,21 @@ void swapTiles(struct MinesweeperGame *game)
     {
         struct Tile *currentTile = &game->tiles[i];
 
-        if (currentTile->status != OPEN)
+        if (currentTile->status == OPEN)
+            continue;
+
+        int randomIndex = randomInt(0, game->size.x * game->size.y - 1);
+
+        struct Tile *randomTile = &game->tiles[randomIndex];
+
+        bool isDifferentTile = i != randomIndex;
+        bool isRandomTileNotOpen = randomTile->status != OPEN;
+
+        if (isDifferentTile && isRandomTileNotOpen)
         {
-            int randomIndex = randomInt(0, game->size.x * game->size.y - 1);
-
-            struct Tile *randomTile = &game->tiles[randomIndex];
-
-            bool isDifferentTile = i != randomIndex;
-            bool isRandomTileNotOpen = randomTile->status != OPEN;
-
-            if (isDifferentTile && isRandomTileNotOpen)
-            {
-                struct Tile temp = *currentTile;
-                *currentTile = *randomTile;
-                *randomTile = temp;
-            }
+            struct Tile temp = *currentTile;
+            *currentTile = *randomTile;
+            *randomTile = temp;
         }
     }
 }
@@ -133,16 +120,12 @@ int getNumNeighoursMines(struct MinesweeperGame *game, struct Pos pos)
         for (int x = -1; x <= 1; x++)
         {
             if (x == 0 && y == 0)
-            {
                 continue;
-            }
 
             struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
 
             if (isInBound(game->size, neighbourPos))
-            {
                 total += getTile(game, neighbourPos)->hasMine;
-            }
         }
     }
 
@@ -186,9 +169,7 @@ void doAction(struct Action action, struct MinesweeperGame *game)
         {
             openTile(game, action.pos);
             if (tile->hasMine)
-            {
                 game->status = LOST;
-            }
         }
         else
         {
@@ -199,19 +180,15 @@ void doAction(struct Action action, struct MinesweeperGame *game)
     else if (tile->status != OPEN)
     {
         if (action.type == FLAG_TILE_ACTION)
-        {
             tile->status = FLAG;
-        }
         else if (action.type == GUESS_TILE_ACTION)
-        {
             tile->status = GUESS;
-        }
     }
 }
 
 struct Action getAction(struct MinesweeperGame *game)
 {
-    bool inputIsValid = false;
+    bool inputIsValid = true;
     struct Action action;
     action.pos = (struct Pos){-1, -1};
 
@@ -224,20 +201,13 @@ struct Action getAction(struct MinesweeperGame *game)
         scanf("%[^\n]%*c", line);
 
         if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(action.pos, game->size))
-        {
             action.type = FLAG_TILE_ACTION;
-            inputIsValid = true;
-        }
         else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
-        {
             action.type = GUESS_TILE_ACTION;
-            inputIsValid = true;
-        }
         else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
-        {
             action.type = OPEN_TILE_ACTION;
-            inputIsValid = true;
-        }
+        else
+            inputIsValid = false;
     } while (!inputIsValid);
 
     return action;
@@ -245,6 +215,9 @@ struct Action getAction(struct MinesweeperGame *game)
 
 void playGame(struct MinesweeperGame *game)
 {
+    const char *WON_TEXT = "Congratulations, you won!\n";
+    const char *LOST_TEXT = "Sorry, you lost.\n";
+
     while (game->status == PROGRESS)
     {
         displayMinesweeperGame(game);
@@ -255,11 +228,7 @@ void playGame(struct MinesweeperGame *game)
     displayOpenMinesweeperGame(game);
 
     if (game->status == WON)
-    {
-        printf("Congratulations, you won!\n");
-    }
+        printf(WON_TEXT);
     else
-    {
-        printf("Sorry, you lost.\n");
-    }
+        printf(LOST_TEXT);
 }
