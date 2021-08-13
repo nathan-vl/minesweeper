@@ -1,6 +1,9 @@
-#include "display.h"
 #include "minesweeper_game.h"
+
+#include "display.h"
 #include "tile.h"
+#include "util.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,9 +40,7 @@ void freeMinesweeperGame(struct MinesweeperGame *game)
 
 bool isInBound(const struct Pos gameSize, const struct Pos pos)
 {
-    bool isInBoundX = pos.x >= 0 && pos.x < gameSize.x;
-    bool isInBoundY = pos.y >= 0 && pos.y < gameSize.y;
-    return isInBoundX && isInBoundY;
+    return (pos.x >= 0 && pos.x < gameSize.x) && (pos.y >= 0 && pos.y < gameSize.y);
 }
 
 struct Tile *getTile(struct MinesweeperGame *game, const struct Pos pos)
@@ -131,14 +132,16 @@ int getNumNeighoursMines(struct MinesweeperGame *game, struct Pos pos)
     {
         for (int x = -1; x <= 1; x++)
         {
-            if (!(x == 0 && y == 0))
+            if (x == 0 && y == 0)
             {
-                struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
+                continue;
+            }
 
-                if (isInBound(game->size, neighbourPos))
-                {
-                    total += getTile(game, neighbourPos)->hasMine;
-                }
+            struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
+
+            if (isInBound(game->size, neighbourPos))
+            {
+                total += getTile(game, neighbourPos)->hasMine;
             }
         }
     }
@@ -152,9 +155,8 @@ void setNeighboursMinefield(struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            struct Pos pos = {x, y};
-            struct Tile *tile = getTile(game, pos);
-            tile->neighbours = getNumNeighoursMines(game, pos);
+            struct Pos pos = newPos(x, y);
+            getTile(game, pos)->neighbours = getNumNeighoursMines(game, pos);
         }
     }
 }
@@ -247,8 +249,7 @@ void playGame(struct MinesweeperGame *game)
     {
         displayMinesweeperGame(game);
 
-        struct Action action = getAction(game);
-        doAction(action, game);
+        doAction(getAction(game), game);
     }
 
     displayOpenMinesweeperGame(game);
