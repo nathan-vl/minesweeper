@@ -35,10 +35,10 @@ struct MinesweeperGame
     struct Tile *tiles;
 };
 
-struct MinesweeperGame newMinesweeperGame(const struct Pos size, const int mines);
+struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines);
 void freeMinesweeperGame(struct MinesweeperGame *game);
 
 void playGame(struct MinesweeperGame *game);
-struct Tile *getTile(struct MinesweeperGame *game, const struct Pos pos);
+struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos);
 
 #endif

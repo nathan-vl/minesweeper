@@ -3,7 +3,7 @@
 
 #include "minesweeper_game.h"
 
-void displayMinesweeperGame(struct MinesweeperGame *game);
-void displayOpenMinesweeperGame(struct MinesweeperGame *game);
+void displayMinesweeperGame(const struct MinesweeperGame *game);
+void displayOpenMinesweeperGame(const struct MinesweeperGame *game);
 
 #endif

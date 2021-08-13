@@ -8,9 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Tile *openTile(struct MinesweeperGame *game, const struct Pos pos);
-
-struct MinesweeperGame newMinesweeperGame(const struct Pos size, const int mines)
+struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
 {
     struct MinesweeperGame game;
 
@@ -38,17 +36,19 @@ void freeMinesweeperGame(struct MinesweeperGame *game)
     free(game->tiles);
 }
 
-bool isInBound(const struct Pos gameSize, const struct Pos pos)
+bool isInBound(struct Pos gameSize, struct Pos pos)
 {
     return (pos.x >= 0 && pos.x < gameSize.x) && (pos.y >= 0 && pos.y < gameSize.y);
 }
 
-struct Tile *getTile(struct MinesweeperGame *game, const struct Pos pos)
+struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos)
 {
     return &game->tiles[pos.x + pos.y * game->size.x];
 }
 
-void openNeighboursTiles(struct MinesweeperGame *game, const struct Pos pos)
+struct Tile *openTile(struct MinesweeperGame *game, struct Pos pos);
+
+void openNeighboursTiles(struct MinesweeperGame *game, struct Pos pos)
 {
     for (int y = -1; y <= 1; y++)
     {
@@ -64,7 +64,7 @@ void openNeighboursTiles(struct MinesweeperGame *game, const struct Pos pos)
     }
 }
 
-struct Tile *openTile(struct MinesweeperGame *game, const struct Pos pos)
+struct Tile *openTile(struct MinesweeperGame *game, struct Pos pos)
 {
     struct Tile *tile = getTile(game, pos);
 
@@ -168,7 +168,7 @@ void initMines(struct MinesweeperGame *game)
     setNeighboursMinefield(game);
 }
 
-void openFirstTile(struct MinesweeperGame *game, const struct Pos pos)
+void openFirstTile(struct MinesweeperGame *game, struct Pos pos)
 {
     getTile(game, pos)->status = OPEN;
 

@@ -10,7 +10,7 @@
 #define GUESS_TILE_CHAR '?'
 #define MINE_TILE_CHAR 'o'
 
-char getTileChar(struct Tile *tile)
+char getTileChar(const struct Tile *tile)
 {
     switch (tile->status)
     {
@@ -33,7 +33,7 @@ char getTileChar(struct Tile *tile)
     return OPEN_TILE_CHAR;
 }
 
-char getOpenTileChar(struct Tile *tile)
+char getOpenTileChar(const struct Tile *tile)
 {
     if (tile->hasMine)
     {
@@ -47,7 +47,7 @@ char getOpenTileChar(struct Tile *tile)
     return OPEN_TILE_CHAR;
 }
 
-void displayMinesweeperGame(struct MinesweeperGame *game)
+void displayMinesweeperGame(const struct MinesweeperGame *game)
 {
     for (int y = 0; y < game->size.y; y++)
     {
@@ -60,7 +60,7 @@ void displayMinesweeperGame(struct MinesweeperGame *game)
     }
 }
 
-void displayOpenMinesweeperGame(struct MinesweeperGame *game)
+void displayOpenMinesweeperGame(const struct MinesweeperGame *game)
 {
     for (int y = 0; y < game->size.y; y++)
     {
