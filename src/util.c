@@ -14,11 +14,3 @@ struct Pos newPos(int x, int y)
 
     return pos;
 }
-
-struct Pos randomPos(const struct Pos max)
-{
-    int x = randomInt(0, max.x);
-    int y = randomInt(0, max.y);
-
-    return newPos(x, y);
-}

@@ -9,6 +9,5 @@ struct Pos
 
 int randomInt(const int min, const int max);
 struct Pos newPos(int x, int y);
-struct Pos randomPos(const struct Pos max);
 
 #endif
