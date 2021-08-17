@@ -230,9 +230,5 @@ void playGame(struct MinesweeperGame *game)
     }
 
     displayOpenMinesweeperGame(game);
-
-    if (game->status == WON)
-        printf(WON_TEXT);
-    else
-        printf(LOST_TEXT);
+    printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
 }
