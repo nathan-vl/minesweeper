@@ -188,25 +188,29 @@ void doAction(struct Action action, struct MinesweeperGame *game)
 
 struct Action getAction(struct MinesweeperGame *game)
 {
-    bool inputIsValid = true;
+    bool inputIsValid;
     struct Action action;
-    action.pos = (struct Pos){-1, -1};
 
     char line[15];
 
     do
     {
+        inputIsValid = true;
+
         printf("> ");
 
         scanf("%[^\n]%*c", line);
 
-        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(action.pos, game->size))
+        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2)
             action.type = FLAG_TILE_ACTION;
-        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
+        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2)
             action.type = GUESS_TILE_ACTION;
-        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2 && isInBound(game->size, action.pos))
+        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2)
             action.type = OPEN_TILE_ACTION;
         else
+            inputIsValid = false;
+
+        if (!isInBound(game->size, action.pos))
             inputIsValid = false;
     } while (!inputIsValid);
 
