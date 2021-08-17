@@ -1,12 +1,7 @@
 #include "minesweeper_game.h"
-
-#include "display.h"
 #include "tile.h"
 #include "util.h"
-
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
 {
@@ -34,11 +29,6 @@ struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
 void freeMinesweeperGame(struct MinesweeperGame *game)
 {
     free(game->tiles);
-}
-
-bool isInBound(struct Pos gameSize, struct Pos pos)
-{
-    return (pos.x >= 0 && pos.x < gameSize.x) && (pos.y >= 0 && pos.y < gameSize.y);
 }
 
 struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos)
@@ -159,7 +149,7 @@ void openFirstTile(struct MinesweeperGame *game, struct Pos pos)
     openTile(game, pos);
 }
 
-void doAction(struct Action action, struct MinesweeperGame *game)
+void doAction(struct MinesweeperGame *game, struct Action action)
 {
     struct Tile *tile = getTile(game, action.pos);
 
@@ -184,51 +174,4 @@ void doAction(struct Action action, struct MinesweeperGame *game)
         else if (action.type == GUESS_TILE_ACTION)
             tile->status = GUESS;
     }
-}
-
-struct Action getAction(struct MinesweeperGame *game)
-{
-    bool inputIsValid;
-    struct Action action;
-
-    char line[15];
-
-    do
-    {
-        inputIsValid = true;
-
-        printf("> ");
-
-        scanf("%[^\n]%*c", line);
-
-        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2)
-            action.type = FLAG_TILE_ACTION;
-        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2)
-            action.type = GUESS_TILE_ACTION;
-        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2)
-            action.type = OPEN_TILE_ACTION;
-        else
-            inputIsValid = false;
-
-        if (!isInBound(game->size, action.pos))
-            inputIsValid = false;
-    } while (!inputIsValid);
-
-    return action;
-}
-
-void playGame(struct MinesweeperGame *game)
-{
-    const char *WON_TEXT = "Congratulations, you won!\n";
-    const char *LOST_TEXT = "Sorry, you lost.\n";
-
-    while (game->status == PROGRESS)
-    {
-        displayMinesweeperGame(game);
-
-        doAction(getAction(game), game);
-    }
-
-    displayOpenMinesweeperGame(game);
-    printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
 }

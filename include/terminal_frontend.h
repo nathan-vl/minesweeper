@@ -1,9 +1,8 @@
-#ifndef DISPLAY_C
-#define DISPLAY_C
+#ifndef TERMINAL_FRONTEND_H
+#define TERMINAL_FRONTEND_H
 
 #include "minesweeper_game.h"
 
-void displayMinesweeperGame(const struct MinesweeperGame *game);
-void displayOpenMinesweeperGame(const struct MinesweeperGame *game);
+void playGame(struct MinesweeperGame *game);
 
 #endif

@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "display.h"
+#include <string.h>
+#include "terminal_frontend.h"
 #include "minesweeper_game.h"
 #include "tile.h"
 #include "util.h"
@@ -62,4 +63,51 @@ void displayOpenMinesweeperGame(const struct MinesweeperGame *game)
         }
         printf("\n");
     }
+}
+
+struct Action getAction(struct MinesweeperGame *game)
+{
+    bool inputIsValid;
+    struct Action action;
+
+    char line[15];
+
+    do
+    {
+        inputIsValid = true;
+
+        printf("> ");
+
+        scanf("%[^\n]%*c", line);
+
+        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2)
+            action.type = FLAG_TILE_ACTION;
+        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2)
+            action.type = GUESS_TILE_ACTION;
+        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2)
+            action.type = OPEN_TILE_ACTION;
+        else
+            inputIsValid = false;
+
+        if (!isInBound(game->size, action.pos))
+            inputIsValid = false;
+    } while (!inputIsValid);
+
+    return action;
+}
+
+void playGame(struct MinesweeperGame *game)
+{
+    const char *WON_TEXT = "Congratulations, you won!\n";
+    const char *LOST_TEXT = "Sorry, you lost.\n";
+
+    while (game->status == PROGRESS)
+    {
+        displayMinesweeperGame(game);
+
+        doAction(game, getAction(game));
+    }
+
+    displayOpenMinesweeperGame(game);
+    printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
 }

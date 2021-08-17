@@ -38,7 +38,8 @@ struct MinesweeperGame
 struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines);
 void freeMinesweeperGame(struct MinesweeperGame *game);
 
-void playGame(struct MinesweeperGame *game);
 struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos);
+
+void doAction(struct MinesweeperGame *game, struct Action action);
 
 #endif

@@ -1,6 +1,6 @@
 #include "util.h"
 #include "minesweeper_game.h"
-#include <stdio.h>
+#include <terminal_frontend.h>
 #include <stdlib.h>
 #include <time.h>
 
