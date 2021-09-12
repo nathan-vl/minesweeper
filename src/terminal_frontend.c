@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <string.h>
-#include "terminal_frontend.h"
 #include "minesweeper_game.h"
+#include "terminal_frontend.h"
 #include "tile.h"
 #include "util.h"
+#include <stdio.h>
+#include <string.h>
 
 #define COVERED_TILE_CHAR '#'
 #define OPEN_TILE_CHAR '.'
