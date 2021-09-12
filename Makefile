@@ -1,21 +1,14 @@
-cc = gcc
-include_dir = -Iinclude
+CC = gcc
+CFLAGS = -Iinclude -O3 -g -Wall -Wextra -Wfloat-equal -Wpedantic
+LINKER_FLAGS = -fsanitize=address
 
-compiler_flags = -O3
-debug_flags = -g -Wall -Wextra -Wfloat-equal -Wpedantic -fsanitize=address
+SRC = $(wildcard src/*.c)
+OBJ = $(subst .c,.o,$(SRC))
 
-objects = $(wildcard src/*.c)
+minesweeper: $(OBJ)
+	$(CC) $(LINKER_FLAGS) $^ -o $@
 
-output_object = Minesweeper
+.PHONY: clean
 
-debug:
-	$(cc) $(include_dir) \
-	$(compiler_flags) $(debug_flags) \
-	$(objects) \
-	-o $(output_object)
-
-$(output_object):
-	$(cc) $(include_dir) \
-	$(compiler_flags) \
-	$(objects) \
-	-o $(output_object)
+clean:
+	rm $(OBJ) minesweeper
