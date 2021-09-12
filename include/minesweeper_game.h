@@ -1,7 +1,6 @@
 #ifndef MINESWEEPER_GAME_H
 #define MINESWEEPER_GAME_H
 
-#include <stdbool.h>
 #include "util.h"
 
 enum PlayerAction
@@ -27,7 +26,7 @@ enum GameStatus
 struct MinesweeperGame
 {
     enum GameStatus status;
-    bool hasOpenedFirstTile;
+    _Bool hasOpenedFirstTile;
 
     struct Pos size;
     int mines;

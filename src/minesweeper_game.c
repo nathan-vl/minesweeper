@@ -8,7 +8,7 @@ struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
     struct MinesweeperGame game;
 
     game.status = PROGRESS;
-    game.hasOpenedFirstTile = false;
+    game.hasOpenedFirstTile = 0;
     game.size = size;
     game.mines = mines;
 
@@ -20,7 +20,7 @@ struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
     {
         struct Tile *tile = &game.tiles[i];
         tile->status = COVERED;
-        tile->hasMine = false;
+        tile->hasMine = 0;
     }
 
     return game;
@@ -71,7 +71,7 @@ void insertMines(struct MinesweeperGame *game)
         else if (tile->status == OPEN)
             continue;
 
-        tile->hasMine = true;
+        tile->hasMine = 1;
         insertedMines++;
     }
 }
@@ -89,8 +89,8 @@ void swapTiles(struct MinesweeperGame *game)
 
         struct Tile *randomTile = &game->tiles[randomIndex];
 
-        bool isDifferentTile = i != randomIndex;
-        bool isRandomTileNotOpen = randomTile->status != OPEN;
+        _Bool isDifferentTile = i != randomIndex;
+        _Bool isRandomTileNotOpen = randomTile->status != OPEN;
 
         if (isDifferentTile && isRandomTileNotOpen)
         {
@@ -164,7 +164,7 @@ void doAction(struct MinesweeperGame *game, struct Action action)
         else
         {
             openFirstTile(game, action.pos);
-            game->hasOpenedFirstTile = true;
+            game->hasOpenedFirstTile = 1;
         }
     }
     else if (tile->status != OPEN)

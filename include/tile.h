@@ -1,8 +1,6 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <stdbool.h>
-
 enum TileStatus
 {
     OPEN,
@@ -13,7 +11,7 @@ enum TileStatus
 
 struct Tile
 {
-    bool hasMine;
+    _Bool hasMine;
     enum TileStatus status;
     int neighbours;
 };

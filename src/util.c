@@ -15,7 +15,7 @@ struct Pos newPos(int x, int y)
     return pos;
 }
 
-bool isInBound(struct Pos gameSize, struct Pos pos)
+_Bool isInBound(struct Pos gameSize, struct Pos pos)
 {
     return (pos.x >= 0 && pos.x < gameSize.x) && (pos.y >= 0 && pos.y < gameSize.y);
 }

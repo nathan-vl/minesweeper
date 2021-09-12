@@ -67,14 +67,14 @@ void displayOpenMinesweeperGame(const struct MinesweeperGame *game)
 
 struct Action getAction(struct MinesweeperGame *game)
 {
-    bool inputIsValid;
+    _Bool inputIsValid;
     struct Action action;
 
     char line[15];
 
     do
     {
-        inputIsValid = true;
+        inputIsValid = 1;
 
         printf("> ");
 
@@ -87,10 +87,10 @@ struct Action getAction(struct MinesweeperGame *game)
         else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2)
             action.type = OPEN_TILE_ACTION;
         else
-            inputIsValid = false;
+            inputIsValid = 0;
 
         if (!isInBound(game->size, action.pos))
-            inputIsValid = false;
+            inputIsValid = 0;
     } while (!inputIsValid);
 
     return action;
