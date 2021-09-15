@@ -140,17 +140,14 @@ void update_neighbours(struct MinesweeperGame *game)
     }
 }
 
-void init_mines(struct MinesweeperGame *game)
-{
-    insert_mines(game);
-    swap_tiles(game);
-    update_neighbours(game);
-}
-
 void open_first_tile(struct MinesweeperGame *game, struct Pos pos)
 {
     get_tile(game, pos)->status = OPEN;
-    init_mines(game);
+
+    insert_mines(game);
+    swap_tiles(game);
+    update_neighbours(game);
+
     open_tile(game, pos);
 }
 
