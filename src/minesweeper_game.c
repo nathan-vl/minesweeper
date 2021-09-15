@@ -63,23 +63,19 @@ void open_tile(struct MinesweeperGame *game, struct Pos pos)
 
 void insert_mines(struct MinesweeperGame *game)
 {
-    int inserted_mines = 0;
+    int inserted_mines = 0,
+        index = 0;
 
-    for (int i = 0; i < game->size.x * game->size.y; i++)
+    while (inserted_mines < game->mines)
     {
-        struct Tile *tile = &game->tiles[i];
+        struct Tile *tile = &game->tiles[index];
 
-        if (inserted_mines == game->mines)
+        if (tile->status != OPEN)
         {
-            return;
+            tile->has_mine = 1;
+            inserted_mines++;
         }
-        else if (tile->status == OPEN)
-        {
-            continue;
-        }
-
-        tile->has_mine = 1;
-        inserted_mines++;
+        index++;
     }
 }
 
