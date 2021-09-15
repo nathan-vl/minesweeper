@@ -140,6 +140,20 @@ void update_neighbours(struct MinesweeperGame *game)
     }
 }
 
+_Bool check_victory(struct MinesweeperGame *game)
+{
+    for (int i = 0; i < game->size.x * game->size.y; i++)
+    {
+        struct Tile tile = game->tiles[i];
+        if (tile.status == COVERED && !tile.has_mine)
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 void open_first_tile(struct MinesweeperGame *game, struct Pos pos)
 {
     get_tile(game, pos)->status = OPEN;
@@ -169,6 +183,11 @@ void do_action(struct MinesweeperGame *game, struct Action action)
         {
             open_first_tile(game, action.pos);
             game->has_opened_first_tile = 1;
+        }
+
+        if (check_victory(game))
+        {
+            game->status = WON;
         }
     }
     else if (tile->status != OPEN)
