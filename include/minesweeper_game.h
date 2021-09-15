@@ -26,7 +26,7 @@ enum GameStatus
 struct MinesweeperGame
 {
     enum GameStatus status;
-    _Bool hasOpenedFirstTile;
+    _Bool has_opened_first_tile;
 
     struct Pos size;
     int mines;
@@ -34,11 +34,11 @@ struct MinesweeperGame
     struct Tile *tiles;
 };
 
-struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines);
-void freeMinesweeperGame(struct MinesweeperGame *game);
+struct MinesweeperGame new_minesweeper_game(struct Pos size, int mines);
+void free_minesweeper_game(struct MinesweeperGame *game);
 
-struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos);
+struct Tile *get_tile(const struct MinesweeperGame *game, struct Pos pos);
 
-void doAction(struct MinesweeperGame *game, struct Action action);
+void do_action(struct MinesweeperGame *game, struct Action action);
 
 #endif

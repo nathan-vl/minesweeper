@@ -7,8 +7,8 @@ struct Pos
     int y;
 };
 
-int randomInt(const int min, const int max);
-struct Pos newPos(int x, int y);
-_Bool isInBound(struct Pos gameSize, struct Pos pos);
+int random_int(const int min, const int max);
+struct Pos new_pos(int x, int y);
+_Bool is_in_bound(struct Pos game_size, struct Pos pos);
 
 #endif

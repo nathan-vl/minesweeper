@@ -1,12 +1,12 @@
-#include "util.h"
 #include <stdlib.h>
+#include "util.h"
 
-int randomInt(const int min, const int max)
+int random_int(const int min, const int max)
 {
     return ((double)rand() / RAND_MAX) * (max - min + 1) + min;
 }
 
-struct Pos newPos(int x, int y)
+struct Pos new_pos(int x, int y)
 {
     struct Pos pos;
     pos.x = x;
@@ -15,7 +15,7 @@ struct Pos newPos(int x, int y)
     return pos;
 }
 
-_Bool isInBound(struct Pos gameSize, struct Pos pos)
+_Bool is_in_bound(struct Pos game_size, struct Pos pos)
 {
-    return (pos.x >= 0 && pos.x < gameSize.x) && (pos.y >= 0 && pos.y < gameSize.y);
+    return (pos.x >= 0 && pos.x < game_size.x) && (pos.y >= 0 && pos.y < game_size.y);
 }

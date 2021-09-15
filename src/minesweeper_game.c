@@ -1,14 +1,14 @@
+#include <stdlib.h>
 #include "minesweeper_game.h"
 #include "tile.h"
 #include "util.h"
-#include <stdlib.h>
 
-struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
+struct MinesweeperGame new_minesweeper_game(struct Pos size, int mines)
 {
     struct MinesweeperGame game;
 
     game.status = PROGRESS;
-    game.hasOpenedFirstTile = 0;
+    game.has_opened_first_tile = 0;
     game.size = size;
     game.mines = mines;
 
@@ -20,88 +20,94 @@ struct MinesweeperGame newMinesweeperGame(struct Pos size, int mines)
     {
         struct Tile *tile = &game.tiles[i];
         tile->status = COVERED;
-        tile->hasMine = 0;
+        tile->has_mine = 0;
     }
 
     return game;
 }
 
-void freeMinesweeperGame(struct MinesweeperGame *game)
+void free_minesweeper_game(struct MinesweeperGame *game)
 {
     free(game->tiles);
 }
 
-struct Tile *getTile(const struct MinesweeperGame *game, struct Pos pos)
+struct Tile *get_tile(const struct MinesweeperGame *game, struct Pos pos)
 {
     return &game->tiles[pos.x + pos.y * game->size.x];
 }
 
-void openTile(struct MinesweeperGame *game, struct Pos pos)
+void open_tile(struct MinesweeperGame *game, struct Pos pos)
 {
-    struct Tile *tile = getTile(game, pos);
+    struct Tile *tile = get_tile(game, pos);
 
     tile->status = OPEN;
 
-    if (tile->hasMine || tile->neighbours > 0)
+    if (tile->has_mine || tile->neighbours > 0)
+    {
         return;
+    }
 
     for (int y = -1; y <= 1; y++)
     {
         for (int x = -1; x <= 1; x++)
         {
-            struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
+            struct Pos neighbour_pos = new_pos(pos.x + x, pos.y + y);
 
-            if (isInBound(game->size, neighbourPos) && getTile(game, neighbourPos)->status != OPEN)
-                openTile(game, neighbourPos);
-
+            if (is_in_bound(game->size, neighbour_pos) && get_tile(game, neighbour_pos)->status != OPEN)
+            {
+                open_tile(game, neighbour_pos);
+            }
         }
     }
 }
 
-void insertMines(struct MinesweeperGame *game)
+void insert_mines(struct MinesweeperGame *game)
 {
-    int insertedMines = 0;
+    int inserted_mines = 0;
 
     for (int i = 0; i < game->size.x * game->size.y; i++)
     {
         struct Tile *tile = &game->tiles[i];
 
-        if (insertedMines == game->mines)
+        if (inserted_mines == game->mines)
+        {
             return;
+        }
         else if (tile->status == OPEN)
+        {
             continue;
+        }
 
-        tile->hasMine = 1;
-        insertedMines++;
+        tile->has_mine = 1;
+        inserted_mines++;
     }
 }
 
-void swapTiles(struct MinesweeperGame *game)
+void swap_tiles(struct MinesweeperGame *game)
 {
     for (int i = 0; i < game->size.x * game->size.y; i++)
     {
-        struct Tile *currentTile = &game->tiles[i];
+        struct Tile *current_tile = &game->tiles[i];
 
-        if (currentTile->status == OPEN)
-            continue;
-
-        int randomIndex = randomInt(0, game->size.x * game->size.y - 1);
-
-        struct Tile *randomTile = &game->tiles[randomIndex];
-
-        _Bool isDifferentTile = i != randomIndex;
-        _Bool isRandomTileNotOpen = randomTile->status != OPEN;
-
-        if (isDifferentTile && isRandomTileNotOpen)
+        if (current_tile->status == OPEN)
         {
-            struct Tile temp = *currentTile;
-            *currentTile = *randomTile;
-            *randomTile = temp;
+            continue;
+        }
+
+        int random_index = random_int(0, game->size.x * game->size.y - 1);
+
+        struct Tile *random_tile = &game->tiles[random_index];
+
+        if (i != random_index && random_tile->status != OPEN)
+        {
+            struct Tile temp = *current_tile;
+            *current_tile = *random_tile;
+            *random_tile = temp;
         }
     }
 }
 
-int getNumNeighoursMines(struct MinesweeperGame *game, struct Pos pos)
+int num_neighours_mines(struct MinesweeperGame *game, struct Pos pos)
 {
     int total = 0;
 
@@ -110,68 +116,77 @@ int getNumNeighoursMines(struct MinesweeperGame *game, struct Pos pos)
         for (int x = -1; x <= 1; x++)
         {
             if (x == 0 && y == 0)
+            {
                 continue;
+            }
 
-            struct Pos neighbourPos = newPos(pos.x + x, pos.y + y);
+            struct Pos neighbour_pos = new_pos(pos.x + x, pos.y + y);
 
-            if (isInBound(game->size, neighbourPos))
-                total += getTile(game, neighbourPos)->hasMine;
+            if (is_in_bound(game->size, neighbour_pos))
+            {
+                total += get_tile(game, neighbour_pos)->has_mine;
+            }
         }
     }
 
     return total;
 }
 
-void setNeighboursMinefield(struct MinesweeperGame *game)
+void update_neighbours(struct MinesweeperGame *game)
 {
     for (int y = 0; y < game->size.y; y++)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            struct Pos pos = newPos(x, y);
-            getTile(game, pos)->neighbours = getNumNeighoursMines(game, pos);
+            struct Pos pos = new_pos(x, y);
+            get_tile(game, pos)->neighbours = num_neighours_mines(game, pos);
         }
     }
 }
 
-void initMines(struct MinesweeperGame *game)
+void init_mines(struct MinesweeperGame *game)
 {
-    insertMines(game);
-    swapTiles(game);
-    setNeighboursMinefield(game);
+    insert_mines(game);
+    swap_tiles(game);
+    update_neighbours(game);
 }
 
-void openFirstTile(struct MinesweeperGame *game, struct Pos pos)
+void open_first_tile(struct MinesweeperGame *game, struct Pos pos)
 {
-    getTile(game, pos)->status = OPEN;
-
-    initMines(game);
-    openTile(game, pos);
+    get_tile(game, pos)->status = OPEN;
+    init_mines(game);
+    open_tile(game, pos);
 }
 
-void doAction(struct MinesweeperGame *game, struct Action action)
+void do_action(struct MinesweeperGame *game, struct Action action)
 {
-    struct Tile *tile = getTile(game, action.pos);
+    struct Tile *tile = get_tile(game, action.pos);
 
     if (action.type == OPEN_TILE_ACTION)
     {
-        if (game->hasOpenedFirstTile)
+        if (game->has_opened_first_tile)
         {
-            openTile(game, action.pos);
-            if (tile->hasMine)
+            open_tile(game, action.pos);
+            if (tile->has_mine)
+            {
                 game->status = LOST;
+            }
         }
         else
         {
-            openFirstTile(game, action.pos);
-            game->hasOpenedFirstTile = 1;
+            open_first_tile(game, action.pos);
+            game->has_opened_first_tile = 1;
         }
     }
     else if (tile->status != OPEN)
     {
         if (action.type == FLAG_TILE_ACTION)
+        {
             tile->status = FLAG;
+        }
         else if (action.type == GUESS_TILE_ACTION)
+        {
             tile->status = GUESS;
+        }
     }
 }

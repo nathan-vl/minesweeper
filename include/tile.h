@@ -11,7 +11,7 @@ enum TileStatus
 
 struct Tile
 {
-    _Bool hasMine;
+    _Bool has_mine;
     enum TileStatus status;
     int neighbours;
 };
