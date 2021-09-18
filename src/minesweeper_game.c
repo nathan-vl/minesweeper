@@ -51,7 +51,10 @@ void open_tile(struct MinesweeperGame *game, struct Pos pos)
     {
         for (int x = -1; x <= 1; x++)
         {
-            struct Pos neighbour_pos = new_pos(pos.x + x, pos.y + y);
+            struct Pos neighbour_pos = {
+                .x = pos.x + x,
+                .y = pos.y + y
+            };
 
             if (is_in_bound(game->size, neighbour_pos) && get_tile(game, neighbour_pos)->status != OPEN)
             {
@@ -116,7 +119,10 @@ int num_neighours_mines(struct MinesweeperGame *game, struct Pos pos)
                 continue;
             }
 
-            struct Pos neighbour_pos = new_pos(pos.x + x, pos.y + y);
+            struct Pos neighbour_pos = {
+                .x = pos.x + x,
+                .y = pos.y + y
+            };
 
             if (is_in_bound(game->size, neighbour_pos))
             {
@@ -134,7 +140,10 @@ void update_neighbours(struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            struct Pos pos = new_pos(x, y);
+            struct Pos pos = {
+                .x = x,
+                .y = y
+            };
             get_tile(game, pos)->neighbours = num_neighours_mines(game, pos);
         }
     }

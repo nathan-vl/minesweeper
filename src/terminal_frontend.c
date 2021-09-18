@@ -51,7 +51,11 @@ void display_minesweeper_game(const struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            printf("%c", get_tile_char(get_tile(game, new_pos(x, y))));
+            struct Pos pos = {
+                .x = x,
+                .y = y
+            };
+            printf("%c", get_tile_char(get_tile(game, pos)));
         }
         printf("\n");
     }
@@ -63,7 +67,11 @@ void display_open_minesweeper_game(const struct MinesweeperGame *game)
     {
         for (int x = 0; x < game->size.x; x++)
         {
-            printf("%c", get_open_tile_char(get_tile(game, new_pos(x, y))));
+            struct Pos pos = {
+                .x = x,
+                .y = y
+            };
+            printf("%c", get_open_tile_char(get_tile(game, pos)));
         }
         printf("\n");
     }
