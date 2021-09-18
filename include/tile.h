@@ -13,7 +13,7 @@ struct Tile
 {
     _Bool has_mine;
     enum TileStatus status;
-    int neighbours;
+    short neighbours;
 };
 
 #endif

@@ -5,18 +5,16 @@
 
 struct MinesweeperGame new_minesweeper_game(struct Pos size, int mines)
 {
-    struct MinesweeperGame game;
+    size_t field_area = size.x * size.y;
+    struct MinesweeperGame game = {
+        .status = PROGRESS,
+        .has_opened_first_tile = 0,
+        .size = size,
+        .mines = mines,
+        .tiles = malloc(sizeof(struct Tile) * field_area)
+    };
 
-    game.status = PROGRESS;
-    game.has_opened_first_tile = 0;
-    game.size = size;
-    game.mines = mines;
-
-    int field_area = size.x * size.y;
-
-    game.tiles = malloc(sizeof(struct Tile) * field_area);
-
-    for (int i = 0; i < field_area; i++)
+    for (size_t i = 0; i < field_area; i++)
     {
         struct Tile *tile = &game.tiles[i];
         tile->status = COVERED;
@@ -66,9 +64,9 @@ void open_tile(struct MinesweeperGame *game, struct Pos pos)
 
 void insert_mines(struct MinesweeperGame *game)
 {
-    int inserted_mines = 0,
-        index = 0;
+    int inserted_mines = 0;
 
+    size_t = index = 0;
     while (inserted_mines < game->mines)
     {
         struct Tile *tile = &game->tiles[index];
@@ -84,7 +82,7 @@ void insert_mines(struct MinesweeperGame *game)
 
 void swap_tiles(struct MinesweeperGame *game)
 {
-    for (int i = 0; i < game->size.x * game->size.y; i++)
+    for (size_t i = 0; i < game->size.x * game->size.y; i++)
     {
         struct Tile *current_tile = &game->tiles[i];
 
@@ -93,7 +91,7 @@ void swap_tiles(struct MinesweeperGame *game)
             continue;
         }
 
-        int random_index = random_int(0, game->size.x * game->size.y - 1);
+        size_t random_index = random_int(0, game->size.x * game->size.y - 1);
 
         struct Tile *random_tile = &game->tiles[random_index];
 
@@ -136,9 +134,9 @@ int num_neighours_mines(struct MinesweeperGame *game, struct Pos pos)
 
 void update_neighbours(struct MinesweeperGame *game)
 {
-    for (int y = 0; y < game->size.y; y++)
+    for (size_t y = 0; y < game->size.y; y++)
     {
-        for (int x = 0; x < game->size.x; x++)
+        for (size_t x = 0; x < game->size.x; x++)
         {
             struct Pos pos = {
                 .x = x,
@@ -151,7 +149,7 @@ void update_neighbours(struct MinesweeperGame *game)
 
 _Bool check_victory(struct MinesweeperGame *game)
 {
-    for (int i = 0; i < game->size.x * game->size.y; i++)
+    for (size_t i = 0; i < game->size.x * game->size.y; i++)
     {
         struct Tile tile = game->tiles[i];
         if (tile.status == COVERED && !tile.has_mine)

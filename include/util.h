@@ -3,8 +3,8 @@
 
 struct Pos
 {
-    int x;
-    int y;
+    size_t x;
+    size_t y;
 };
 
 int random_int(const int min, const int max);

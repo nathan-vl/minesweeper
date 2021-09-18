@@ -92,15 +92,15 @@ struct Action get_action(struct MinesweeperGame *game)
 
         scanf("%[^\n]%*c", line);
 
-        if (sscanf(line, "f %i %i", &action.pos.x, &action.pos.y) == 2)
+        if (sscanf(line, "f %zu %zu", &action.pos.x, &action.pos.y) == 2)
         {
             action.type = FLAG_TILE_ACTION;
         }
-        else if (sscanf(line, "g %i %i", &action.pos.x, &action.pos.y) == 2)
+        else if (sscanf(line, "g %zu %zu", &action.pos.x, &action.pos.y) == 2)
         {
             action.type = GUESS_TILE_ACTION;
         }
-        else if (sscanf(line, "%i %i", &action.pos.x, &action.pos.y) == 2)
+        else if (sscanf(line, "%zu %zu", &action.pos.x, &action.pos.y) == 2)
         {
             action.type = OPEN_TILE_ACTION;
         }
