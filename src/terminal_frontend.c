@@ -1,17 +1,47 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "minesweeper_game.h"
 #include "terminal_frontend.h"
 #include "tile.h"
 #include "util.h"
 
-#define COVERED_TILE_CHAR '#'
-#define OPEN_TILE_CHAR '.'
-#define FLAG_TILE_CHAR '!'
-#define GUESS_TILE_CHAR '?'
-#define MINE_TILE_CHAR 'o'
+#define ANSI_ESC "\x1b"
 
-char get_tile_char(const struct Tile *tile)
+#define BOLD "1"
+
+#define FG "3"
+
+#define RED "1"
+#define GREEN "2"
+#define YELLOW "3"
+#define BLUE "4"
+#define MAGENTA "5"
+#define CYAN "6"
+
+#define WITH ";"
+
+#define FMT(style) ANSI_ESC "[" style "m"
+#define FMT_SIMPLE(style, str) FMT(style) str FMT("")
+
+#define COVERED_TILE_CHAR "#"
+#define FLAG_TILE_CHAR "!"
+#define GUESS_TILE_CHAR "?"
+#define MINE_TILE_CHAR "o"
+
+const char *neighbours_display_tile[] = {
+    ".",
+    FMT_SIMPLE(FG BLUE, "1"),
+    FMT_SIMPLE(FG GREEN, "2"),
+    FMT_SIMPLE(FG YELLOW, "3"),
+    FMT_SIMPLE(FG RED, "4"),
+    FMT_SIMPLE(FG BLUE WITH BOLD, "5"),
+    FMT_SIMPLE(FG GREEN WITH BOLD, "6"),
+    FMT_SIMPLE(FG YELLOW WITH BOLD, "7"),
+    FMT_SIMPLE(FG RED WITH BOLD, "8"),
+};
+
+const char *get_display_tile(const struct Tile *tile)
 {
     switch (tile->status)
     {
@@ -26,23 +56,18 @@ char get_tile_char(const struct Tile *tile)
         {
             return MINE_TILE_CHAR;
         }
-        else if (tile->neighbours != 0)
-        {
-            return tile->neighbours + '0';
-        }
     }
 
-    return OPEN_TILE_CHAR;
+    return neighbours_display_tile[tile->neighbours];
 }
 
-char get_open_tile_char(const struct Tile *tile)
+const char *get_display_open_tile(const struct Tile *tile)
 {
     if (tile->has_mine)
+    {
         return MINE_TILE_CHAR;
-    else if (tile->neighbours != 0)
-        return tile->neighbours + '0';
-
-    return OPEN_TILE_CHAR;
+    }
+    return neighbours_display_tile[tile->neighbours];
 }
 
 void display_minesweeper_game(const struct MinesweeperGame *game)
@@ -55,7 +80,7 @@ void display_minesweeper_game(const struct MinesweeperGame *game)
                 .x = x,
                 .y = y
             };
-            printf("%c", get_tile_char(get_tile(game, pos)));
+            printf("%s", get_display_tile(get_tile(game, pos)));
         }
         printf("\n");
     }
@@ -71,7 +96,7 @@ void display_open_minesweeper_game(const struct MinesweeperGame *game)
                 .x = x,
                 .y = y
             };
-            printf("%c", get_open_tile_char(get_tile(game, pos)));
+            printf("%s", get_display_open_tile(get_tile(game, pos)));
         }
         printf("\n");
     }
