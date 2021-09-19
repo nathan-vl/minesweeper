@@ -17,7 +17,6 @@
 #define YELLOW "3"
 #define BLUE "4"
 #define MAGENTA "5"
-#define CYAN "6"
 
 #define WITH ";"
 
@@ -25,20 +24,20 @@
 #define FMT_SIMPLE(style, str) FMT(style) str FMT("")
 
 #define COVERED_TILE_CHAR "#"
-#define FLAG_TILE_CHAR "!"
-#define GUESS_TILE_CHAR "?"
-#define MINE_TILE_CHAR "o"
+#define FLAG_TILE_CHAR FMT_SIMPLE(FG YELLOW, "!")
+#define GUESS_TILE_CHAR FMT_SIMPLE(FG YELLOW, "?")
+#define MINE_TILE_CHAR FMT_SIMPLE(FG RED WITH BOLD, "o")
 
 const char *neighbours_display_tile[] = {
     ".",
-    FMT_SIMPLE(FG BLUE, "1"),
-    FMT_SIMPLE(FG GREEN, "2"),
-    FMT_SIMPLE(FG YELLOW, "3"),
-    FMT_SIMPLE(FG RED, "4"),
-    FMT_SIMPLE(FG BLUE WITH BOLD, "5"),
-    FMT_SIMPLE(FG GREEN WITH BOLD, "6"),
-    FMT_SIMPLE(FG YELLOW WITH BOLD, "7"),
-    FMT_SIMPLE(FG RED WITH BOLD, "8"),
+    "1",
+    FMT_SIMPLE(FG BLUE, "2"),
+    FMT_SIMPLE(FG GREEN, "3"),
+    FMT_SIMPLE(FG MAGENTA, "4"),
+    "5",
+    FMT_SIMPLE(FG BLUE WITH BOLD, "6"),
+    FMT_SIMPLE(FG GREEN WITH BOLD, "7"),
+    FMT_SIMPLE(FG MAGENTA WITH BOLD, "8"),
 };
 
 const char *get_display_tile(const struct Tile *tile)
