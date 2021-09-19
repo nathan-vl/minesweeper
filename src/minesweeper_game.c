@@ -66,7 +66,7 @@ void insert_mines(struct MinesweeperGame *game)
 {
     int inserted_mines = 0;
 
-    size_t = index = 0;
+    size_t index = 0;
     while (inserted_mines < game->mines)
     {
         struct Tile *tile = &game->tiles[index];
