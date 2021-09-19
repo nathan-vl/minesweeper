@@ -40,6 +40,15 @@ const char *neighbours_display_tile[] = {
     FMT_SIMPLE(FG MAGENTA WITH BOLD, "8"),
 };
 
+const char *get_display_open_tile(const struct Tile *tile)
+{
+    if (tile->has_mine)
+    {
+        return MINE_TILE_CHAR;
+    }
+    return neighbours_display_tile[tile->neighbours];
+}
+
 const char *get_display_tile(const struct Tile *tile)
 {
     switch (tile->status)
@@ -51,22 +60,8 @@ const char *get_display_tile(const struct Tile *tile)
     case GUESS:
         return GUESS_TILE_CHAR;
     default:
-        if (tile->has_mine)
-        {
-            return MINE_TILE_CHAR;
-        }
+        return get_display_open_tile(tile);
     }
-
-    return neighbours_display_tile[tile->neighbours];
-}
-
-const char *get_display_open_tile(const struct Tile *tile)
-{
-    if (tile->has_mine)
-    {
-        return MINE_TILE_CHAR;
-    }
-    return neighbours_display_tile[tile->neighbours];
 }
 
 void display_minesweeper_game(const struct MinesweeperGame *game)
