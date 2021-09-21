@@ -167,6 +167,9 @@ _Bool check_victory(struct MinesweeperGame *game)
 
 void open_first_tile(struct MinesweeperGame *game, struct Pos pos)
 {
+    game->started_time = time(NULL);
+    srand(game->started_time);
+
     get_tile(game, pos)->status = OPEN;
 
     insert_mines(game);

@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include <time.h>
 #include "minesweeper_game.h"
 #include "terminal_frontend.h"
 
@@ -25,8 +23,6 @@ int main(int argc, const char *argv[])
             }
         }
     }
-
-    srand(time(NULL));
 
     struct MinesweeperGame game = new_minesweeper_game((struct Pos){8, 8}, 16);
 

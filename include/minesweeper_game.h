@@ -1,6 +1,7 @@
 #ifndef MINESWEEPER_GAME_H
 #define MINESWEEPER_GAME_H
 
+#include <time.h>
 #include "util.h"
 
 enum PlayerAction
@@ -25,6 +26,7 @@ enum GameStatus
 
 struct MinesweeperGame
 {
+    time_t started_time;
     enum GameStatus status;
     _Bool has_opened_first_tile;
 
