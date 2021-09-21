@@ -34,17 +34,9 @@ struct Tile *get_tile(const struct MinesweeperGame *game, struct Pos pos)
     return &game->tiles[pos.x + pos.y * game->size.x];
 }
 
-void open_tile(struct MinesweeperGame *game, struct Pos pos)
+void open_tile(struct MinesweeperGame *game, struct Pos pos);
+void open_neighbouring_tiles(struct MinesweeperGame *game, struct Pos pos)
 {
-    struct Tile *tile = get_tile(game, pos);
-
-    tile->status = OPEN;
-
-    if (tile->has_mine || tile->neighbours > 0)
-    {
-        return;
-    }
-
     for (int y = -1; y <= 1; y++)
     {
         for (int x = -1; x <= 1; x++)
@@ -59,6 +51,18 @@ void open_tile(struct MinesweeperGame *game, struct Pos pos)
                 open_tile(game, neighbour_pos);
             }
         }
+    }
+}
+
+void open_tile(struct MinesweeperGame *game, struct Pos pos)
+{
+    struct Tile *tile = get_tile(game, pos);
+
+    tile->status = OPEN;
+
+    if (!tile->has_mine && tile->neighbours == 0)
+    {
+        open_neighbouring_tiles(game, pos);
     }
 }
 
