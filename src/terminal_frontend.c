@@ -8,6 +8,10 @@
 
 #define ANSI_ESC "\x1b"
 
+#define ALTERNATE_BUFFER ANSI_ESC "[?1049h"
+#define NORMAL_BUFFER ANSI_ESC "[?1049l"
+#define CLEAR_SCREEN ANSI_ESC "[2J"
+
 #define BOLD "1"
 
 #define FG "3"
@@ -22,6 +26,7 @@
 
 #define FMT(style) ANSI_ESC "[" style "m"
 #define FMT_SIMPLE(style, str) FMT(style) str FMT("")
+#define MOVE_TO(X, Y) ANSI_ESC "[" Y ";" X "H"
 
 #define COVERED_TILE_CHAR "#"
 #define FLAG_TILE_CHAR FMT_SIMPLE(FG YELLOW, "!")
@@ -142,12 +147,16 @@ void play_game(struct MinesweeperGame *game)
     const char *WON_TEXT = "Congratulations, you won!\n";
     const char *LOST_TEXT = "Sorry, you lost.\n";
 
+    printf(ALTERNATE_BUFFER CLEAR_SCREEN MOVE_TO("1", "1"));
+
     while (game->status == PROGRESS)
     {
         display_minesweeper_game(game);
 
         do_action(game, get_action(game));
     }
+
+    printf(NORMAL_BUFFER);
 
     display_open_minesweeper_game(game);
     printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
