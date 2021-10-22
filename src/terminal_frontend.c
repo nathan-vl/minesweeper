@@ -47,9 +47,9 @@ char get_open_tile_char(const struct Tile *tile)
 
 void display_minesweeper_game(const struct MinesweeperGame *game)
 {
-    for (size_t y = 0; y < game->size.y; y++)
+    for (size_t y = 0; y < game->size.y; ++y)
     {
-        for (size_t x = 0; x < game->size.x; x++)
+        for (size_t x = 0; x < game->size.x; ++x)
         {
             struct Pos pos = {
                 .x = x,
@@ -63,9 +63,9 @@ void display_minesweeper_game(const struct MinesweeperGame *game)
 
 void display_open_minesweeper_game(const struct MinesweeperGame *game)
 {
-    for (size_t y = 0; y < game->size.y; y++)
+    for (size_t y = 0; y < game->size.y; ++y)
     {
-        for (size_t x = 0; x < game->size.x; x++)
+        for (size_t x = 0; x < game->size.x; ++x)
         {
             struct Pos pos = {
                 .x = x,

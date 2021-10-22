@@ -7,7 +7,7 @@ int main(int argc, const char *argv[])
 {
     if (argc > 1)
     {
-        for (int i = 1; i < argc; i++)
+        for (int i = 1; i < argc; ++i)
         {
             const char *arg = argv[i];
 
