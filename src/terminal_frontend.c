@@ -11,9 +11,9 @@
 #define GUESS_TILE_CHAR '?'
 #define MINE_TILE_CHAR 'o'
 
-char get_tile_char(const struct Tile *tile)
+char getTileChar(TileStatus status, _Bool has_mine, int neighbours)
 {
-    switch (tile->status)
+    switch (status)
     {
     case COVERED:
         return COVERED_TILE_CHAR;
@@ -22,65 +22,56 @@ char get_tile_char(const struct Tile *tile)
     case GUESS:
         return GUESS_TILE_CHAR;
     default:
-        if (tile->has_mine)
-        {
+        if (has_mine)
             return MINE_TILE_CHAR;
-        }
-        else if (tile->neighbours != 0)
-        {
-            return tile->neighbours + '0';
-        }
+
+        if (neighbours != 0)
+            return neighbours + '0';
     }
 
     return OPEN_TILE_CHAR;
 }
 
-char get_open_tile_char(const struct Tile *tile)
+char getOpenTileChar(_Bool has_mine, int neighbours)
 {
-    if (tile->has_mine)
+    if (has_mine)
         return MINE_TILE_CHAR;
-    else if (tile->neighbours != 0)
-        return tile->neighbours + '0';
+    if (neighbours != 0)
+        return neighbours + '0';
 
     return OPEN_TILE_CHAR;
 }
 
-void display_minesweeper_game(const struct MinesweeperGame *game)
+void displayMinesweeperGame(Pos size, Tiles tiles)
 {
-    for (size_t y = 0; y < game->size.y; ++y)
+    for (size_t y = 0; y < size.y; ++y)
     {
-        for (size_t x = 0; x < game->size.x; ++x)
+        for (size_t x = 0; x < size.x; ++x)
         {
-            struct Pos pos = {
-                .x = x,
-                .y = y
-            };
-            printf("%c", get_tile_char(get_tile(game, pos)));
+            int i = y * size.x + x;
+            printf("%c", getTileChar(tiles.status[i], tiles.mines[i], tiles.neighbours[i]));
         }
         printf("\n");
     }
 }
 
-void display_open_minesweeper_game(const struct MinesweeperGame *game)
+void displayOpenMinesweeperGame(Pos size, Tiles tiles)
 {
-    for (size_t y = 0; y < game->size.y; ++y)
+    for (size_t y = 0; y < size.y; ++y)
     {
-        for (size_t x = 0; x < game->size.x; ++x)
+        for (size_t x = 0; x < size.x; ++x)
         {
-            struct Pos pos = {
-                .x = x,
-                .y = y
-            };
-            printf("%c", get_open_tile_char(get_tile(game, pos)));
+            int i = y * size.x + x;
+            printf("%c", getOpenTileChar(tiles.mines[i], tiles.neighbours[i]));
         }
         printf("\n");
     }
 }
 
-struct Action get_action(struct MinesweeperGame *game)
+Action getAction(MinesweeperGame *game)
 {
     _Bool input_is_valid;
-    struct Action action;
+    Action action;
 
     char line[15];
 
@@ -90,46 +81,39 @@ struct Action get_action(struct MinesweeperGame *game)
 
         printf("> ");
 
-        scanf("%[^\n]%*c", line);
+        int res = scanf("%[^\n]%*c", line);
+
+        if (res == 0)
+            continue;
 
         if (sscanf(line, "f %zu %zu", &action.pos.x, &action.pos.y) == 2)
-        {
             action.type = FLAG_TILE_ACTION;
-        }
         else if (sscanf(line, "g %zu %zu", &action.pos.x, &action.pos.y) == 2)
-        {
             action.type = GUESS_TILE_ACTION;
-        }
         else if (sscanf(line, "%zu %zu", &action.pos.x, &action.pos.y) == 2)
-        {
             action.type = OPEN_TILE_ACTION;
-        }
         else
-        {
             input_is_valid = 0;
-        }
 
-        if (!is_in_bound(game->size, action.pos))
-        {
+        if (!isInBoundPos(game->size, action.pos))
             input_is_valid = 0;
-        }
     } while (!input_is_valid);
 
     return action;
 }
 
-void play_game(struct MinesweeperGame *game)
+void playGame(MinesweeperGame *game)
 {
     const char *WON_TEXT = "Congratulations, you won!\n";
     const char *LOST_TEXT = "Sorry, you lost.\n";
 
     while (game->status == PROGRESS)
     {
-        display_minesweeper_game(game);
+        displayMinesweeperGame(game->size, game->tiles);
 
-        do_action(game, get_action(game));
+        doAction(game, getAction(game));
     }
 
-    display_open_minesweeper_game(game);
+    displayOpenMinesweeperGame(game->size, game->tiles);
     printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
 }

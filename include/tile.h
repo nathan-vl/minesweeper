@@ -1,19 +1,19 @@
 #ifndef TILE_H
 #define TILE_H
 
-enum TileStatus
+typedef enum TileStatus
 {
     OPEN,
     FLAG,
     COVERED,
     GUESS
-};
+} TileStatus;
 
-struct Tile
+typedef struct Tiles
 {
-    _Bool has_mine;
-    enum TileStatus status;
-    short neighbours;
-};
+    _Bool *mines;
+    short *neighbours;
+    TileStatus *status;
+} Tiles;
 
 #endif

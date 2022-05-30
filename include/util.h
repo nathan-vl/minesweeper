@@ -1,13 +1,13 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-struct Pos
+typedef struct Pos
 {
     size_t x;
     size_t y;
-};
+} Pos;
 
-int random_int(const int min, const int max);
-_Bool is_in_bound(struct Pos game_size, struct Pos pos);
+int randomInt(int min, int max);
+_Bool isInBoundPos(Pos game_size, Pos pos);
 
 #endif

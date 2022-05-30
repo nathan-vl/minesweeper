@@ -3,44 +3,43 @@
 
 #include <time.h>
 #include "util.h"
+#include "tile.h"
 
-enum PlayerAction
+typedef enum PlayerAction
 {
     OPEN_TILE_ACTION,
     FLAG_TILE_ACTION,
     GUESS_TILE_ACTION,
-};
+} PlayerAction;
 
-struct Action
+typedef struct Action
 {
-    enum PlayerAction type;
-    struct Pos pos;
-};
+    PlayerAction type;
+    Pos pos;
+} Action;
 
-enum GameStatus
+typedef enum GameStatus
 {
     PROGRESS,
     WON,
     LOST
-};
+} GameStatus;
 
-struct MinesweeperGame
+typedef struct MinesweeperGame
 {
     time_t started_time;
-    enum GameStatus status;
+    GameStatus status;
     _Bool has_opened_first_tile;
 
-    struct Pos size;
+    Pos size;
     int mines;
 
-    struct Tile *tiles;
-};
+    Tiles tiles;
+} MinesweeperGame;
 
-struct MinesweeperGame new_minesweeper_game(struct Pos size, int mines);
-void free_minesweeper_game(struct MinesweeperGame *game);
+MinesweeperGame newMinesweeperGame(Pos size, int mines);
+void freeMinesweeperGame(MinesweeperGame *game);
 
-struct Tile *get_tile(const struct MinesweeperGame *game, struct Pos pos);
-
-void do_action(struct MinesweeperGame *game, struct Action action);
+void doAction(MinesweeperGame *game, Action action);
 
 #endif

@@ -3,6 +3,6 @@
 
 #include "minesweeper_game.h"
 
-void play_game(struct MinesweeperGame *game);
+void playGame(MinesweeperGame *game);
 
 #endif
