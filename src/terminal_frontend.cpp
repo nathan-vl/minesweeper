@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <string.h>
-#include "minesweeper_game.h"
-#include "terminal_frontend.h"
-#include "tile.h"
-#include "util.h"
+#include <iostream>
+#include "minesweeper_game.hpp"
+#include "terminal_frontend.hpp"
+#include "tile.hpp"
+#include "util.hpp"
 
 #define COVERED_TILE_CHAR '#'
 #define OPEN_TILE_CHAR '.'
@@ -11,15 +10,15 @@
 #define GUESS_TILE_CHAR '?'
 #define MINE_TILE_CHAR 'o'
 
-char getTileChar(TileStatus status, _Bool has_mine, int neighbours)
+char getTileChar(TileStatus status, bool has_mine, int neighbours)
 {
     switch (status)
     {
-    case COVERED:
+    case TileStatus::COVERED:
         return COVERED_TILE_CHAR;
-    case FLAG:
+    case TileStatus::FLAG:
         return FLAG_TILE_CHAR;
-    case GUESS:
+    case TileStatus::GUESS:
         return GUESS_TILE_CHAR;
     default:
         if (has_mine)
@@ -32,7 +31,7 @@ char getTileChar(TileStatus status, _Bool has_mine, int neighbours)
     return OPEN_TILE_CHAR;
 }
 
-char getOpenTileChar(_Bool has_mine, int neighbours)
+char getOpenTileChar(bool has_mine, int neighbours)
 {
     if (has_mine)
         return MINE_TILE_CHAR;
@@ -44,33 +43,33 @@ char getOpenTileChar(_Bool has_mine, int neighbours)
 
 void displayMinesweeperGame(Pos size, Tiles tiles)
 {
-    for (size_t y = 0; y < size.y; ++y)
+    for (auto y = 0; y < size.y; ++y)
     {
-        for (size_t x = 0; x < size.x; ++x)
+        for (auto x = 0; x < size.x; ++x)
         {
             int i = y * size.x + x;
-            printf("%c", getTileChar(tiles.status[i], tiles.mines[i], tiles.neighbours[i]));
+            std::cout << getTileChar(tiles.status[i], tiles.mines[i], tiles.neighbours[i]);
         }
-        printf("\n");
+        std::cout << "\n";
     }
 }
 
 void displayOpenMinesweeperGame(Pos size, Tiles tiles)
 {
-    for (size_t y = 0; y < size.y; ++y)
+    for (auto y = 0; y < size.y; ++y)
     {
-        for (size_t x = 0; x < size.x; ++x)
+        for (auto x = 0; x < size.x; ++x)
         {
             int i = y * size.x + x;
-            printf("%c", getOpenTileChar(tiles.mines[i], tiles.neighbours[i]));
+            std::cout << getOpenTileChar(tiles.mines[i], tiles.neighbours[i]);
         }
-        printf("\n");
+        std::cout << "\n";
     }
 }
 
 Action getAction(MinesweeperGame *game)
 {
-    _Bool input_is_valid;
+    bool input_is_valid;
     Action action;
 
     char line[15];
@@ -79,7 +78,7 @@ Action getAction(MinesweeperGame *game)
     {
         input_is_valid = 1;
 
-        printf("> ");
+        std::cout << "> ";
 
         int res = scanf("%[^\n]%*c", line);
 
@@ -87,11 +86,11 @@ Action getAction(MinesweeperGame *game)
             continue;
 
         if (sscanf(line, "f %zu %zu", &action.pos.x, &action.pos.y) == 2)
-            action.type = FLAG_TILE_ACTION;
+            action.type = PlayerAction::FLAG_TILE;
         else if (sscanf(line, "g %zu %zu", &action.pos.x, &action.pos.y) == 2)
-            action.type = GUESS_TILE_ACTION;
+            action.type = PlayerAction::GUESS_TILE;
         else if (sscanf(line, "%zu %zu", &action.pos.x, &action.pos.y) == 2)
-            action.type = OPEN_TILE_ACTION;
+            action.type = PlayerAction::OPEN_TILE;
         else
             input_is_valid = 0;
 
@@ -104,16 +103,17 @@ Action getAction(MinesweeperGame *game)
 
 void playGame(MinesweeperGame *game)
 {
-    const char *WON_TEXT = "Congratulations, you won!\n";
-    const char *LOST_TEXT = "Sorry, you lost.\n";
-
-    while (game->status == PROGRESS)
+    while (game->status == GameStatus::PROGRESS)
     {
         displayMinesweeperGame(game->size, game->tiles);
 
-        doAction(game, getAction(game));
+        game->doAction(getAction(game));
     }
 
     displayOpenMinesweeperGame(game->size, game->tiles);
-    printf("%s", (game->status == WON) ? WON_TEXT : LOST_TEXT);
+    if (game->status == GameStatus::WON) {
+        std::cout << "Game over, you won!\n";
+    } else {
+        std::cout << "Game over, you lost.\n";
+    }
 }
